@@ -6,6 +6,9 @@ setInterval(() => {
         for(let drop of contentDrops){
             drop.click();
         }
-    return
+        return
     } 
+    else {
+        console.log("nothing to take");
+    }
 }, 10000 * 6);

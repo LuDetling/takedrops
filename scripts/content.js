@@ -13,9 +13,19 @@ window.onload = (event) => {
             else {
                 window.location.href = previousUrlTwitch;
             }
-        }, 1000);
+        }, 10000);
     } else {
         //if notification ok 
         sessionStorage.setItem("previousUrlTwitch", window.location.href);
+        setInterval(() => {
+            const notification = document.querySelector(".onsite-notifications__badge");
+            const openNotif = document.querySelector(".onsite-notifications button")
+            if (!notification) return
+            openNotif.click();
+            setTimeout(() => {
+                window.location.href = inventoryLocation;
+            }, 5000);
+
+        }, 10000);
     }
 }

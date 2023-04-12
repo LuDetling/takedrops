@@ -1,7 +1,8 @@
 window.onload = (event) => {
     const inventoryLocation = "https://www.twitch.tv/drops/inventory";
-    if (window.location.href === inventoryLocation) {
-        const previousUrlTwitch = sessionStorage.getItem("previousUrlTwitch");
+    const { isRedirect, url } = JSON.parse(sessionStorage.getItem("previousUrlTwitch"));
+
+    if (window.location.href === inventoryLocation && isRedirect === true) {
         setInterval(() => {
             const contentDrops = document.querySelectorAll("[data-test-selector='DropsCampaignInProgressRewardPresentation-claim-button']");
             if (contentDrops.length > 0) {
@@ -11,21 +12,25 @@ window.onload = (event) => {
                 return
             }
             else {
-                window.location.href = previousUrlTwitch;
+                sessionStorage.setItem("previousUrlTwitch", JSON.stringify({ url, isRedirect: false }));
+                window.close()
             }
-        }, 10000);
+        }, 5000);
     } else {
         //if notification ok 
-        sessionStorage.setItem("previousUrlTwitch", window.location.href);
+        let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+width=1,height=1,left=-1000,top=-1000`;
+        sessionStorage.setItem("previousUrlTwitch", JSON.stringify({ url: window.location.href, isRedirect: false }));
         setInterval(() => {
             const notification = document.querySelector(".onsite-notifications__badge");
             const openNotif = document.querySelector(".onsite-notifications button")
             if (!notification) return
             openNotif.click();
+            sessionStorage.setItem("previousUrlTwitch", JSON.stringify({ url, isRedirect: true }));
             setTimeout(() => {
-                window.location.href = inventoryLocation;
-            }, 5000);
+                window.open(inventoryLocation, "inventory", params);
+            }, 1000);
 
-        }, 10000);
+        }, 10000 * 6);
     }
 }
